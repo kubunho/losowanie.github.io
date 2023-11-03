@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Losowanie</title>
+</head>
+<body>
+    <h1>Losowanie osób</h1>
+    <label for="losujaca">Wybierz osobę losującą: </label>
+    <select id="losujaca">
+        <option value="Kuchar">Kuchar</option>
+        <option value="Cyniu">Cyniu</option>
+        <option value="Walu">Walu</option>
+        <option value="Bialy">Bialy</option>
+        <option value="Chajdi">Chajdi</option>
+        <option value="Lisek">Lisek</option>
+        <option value="Domin">Domin</option>
+        <option value="Siwy">Siwy</option>
+        <option value="Mariusz">Mariusz</option>
+    </select>
+    <button onclick="losujOsobe()">Losuj</button>
+    <button id="hideResultButton" onclick="schowajWynik()">Schowaj wynik</button>
+    <button id="showLogButton" onclick="pokazLog()">Pokaż log</button>
+    <div id="results"></div>
+    <div id="log" style="display: none;"></div>
+
+    <script>
+        const osoby = ["Kuchar", "Cyniu", "Walu", "Bialy", "Chajdi", "Lisek", "Domin", "Siwy", "Mariusz"];
+        let wylosowaneOsoby = [];
+        let logWynikow = [];
+
+        function losujOsobe() {
+            const losujacaOsoba = document.getElementById("losujaca").value;
+            const dostepneOsoby = osoby.filter(osoba => osoba !== losujacaOsoba);
+
+            const n = dostepneOsoby.length;
+            if (n === 0) {
+                document.getElementById("results").textContent = " - Wszystkie osoby zostały już wylosowane!";
+                return;
+            }
+
+            const losowaOsobaIndex = Math.floor(Math.random() * n);
+            const losowanaOsoba = dostepneOsoby[losowaOsobaIndex];
+            osoby.splice(osoby.indexOf(losowanaOsoba), 1);
+            wylosowaneOsoby.push({ losujaca: losujacaOsoba, wylosowana: losowanaOsoba });
+
+            const resultsElement = document.getElementById("results");
+            resultsElement.style.display = "block"; // Pokaż wynik
+            resultsElement.textContent = `${losujacaOsoba} losuje ${losowanaOsoba}`;
+
+            if (wylosowaneOsoby.length === 9) {
+                resultsElement.textContent += " - Wszystkie osoby zostały już wylosowane!";
+            }
+
+            logWynikow.push(`${losujacaOsoba} losuje ${losowanaOsoba}`);
+        }
+
+        function pokazLog() {
+            const logElement = document.getElementById("log");
+            const showLogButton = document.getElementById("showLogButton");
+
+            if (logElement.style.display === "none") {
+                logElement.style.display = "block";
+                showLogButton.textContent = "Schowaj log";
+                logElement.textContent = logWynikow.join('\n');
+            } else {
+                logElement.style.display = "none";
+                showLogButton.textContent = "Pokaż log";
+            }
+        }
+
+        function schowajWynik() {
+            const resultsElement = document.getElementById("results");
+            resultsElement.style.display = "none"; // Ukryj wynik
+        }
+    </script>
+</body>
+</html>
